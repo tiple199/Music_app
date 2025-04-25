@@ -49,7 +49,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
 
     // Glide
-    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
 
     // AndroidX
     implementation("androidx.cardview:cardview:1.0.0")
@@ -65,5 +65,6 @@ dependencies {
     // CircleIndicator
     implementation("me.relex:circleindicator:2.1.6")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    implementation("com.github.bumptech.glide:okhttp3-integration:4.15.1")
 
 }

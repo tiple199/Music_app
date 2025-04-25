@@ -68,7 +68,8 @@ public class APIRetrofitClient {
                     .addInterceptor(chain -> {
                         Request originalRequest = chain.request();
                         Request newRequest = originalRequest.newBuilder()
-                                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+                                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36")
+                                .header("Cookie", "__test=a4fbdc96fd753dc15a6fff32c495c7e9") // Thêm cookie tại đây
                                 .build();
                         return chain.proceed(newRequest);
                     })

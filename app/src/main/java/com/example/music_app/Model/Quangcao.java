@@ -3,13 +3,13 @@ package com.example.music_app.Model;
 import com.google.gson.annotations.SerializedName;
 
 public class Quangcao {
-    @SerializedName("IdQuangCao") // Khớp với JSON
+    @SerializedName("idQuangCao") // Khớp với JSON
     private String idQuangCao;
 
-    @SerializedName("Hinhanh")    // Khớp với JSON
+    @SerializedName("hinhanh")    // Khớp với JSON
     private String hinhanh;
 
-    @SerializedName("Idbaihat")   // Khớp với JSON
+    @SerializedName("idbaihat")   // Khớp với JSON
     private String idbaihat;
 
     public String getIdQuangCao() {
