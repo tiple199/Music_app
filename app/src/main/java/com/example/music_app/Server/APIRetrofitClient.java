@@ -2,28 +2,22 @@ package com.example.music_app.Server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import java.security.cert.CertificateException;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
-import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Utility class to provide Retrofit client for API calls.
+ */
 public class APIRetrofitClient {
+    private static volatile Retrofit retrofit = null;
     private static String currentBaseUrl = null;
-    private static Retrofit retrofit = null;
 
-    public static Retrofit getClient(String baseUrl) {
+    public static synchronized Retrofit getClient(String baseUrl) {
         if (baseUrl == null || baseUrl.trim().isEmpty()) {
             throw new IllegalArgumentException("Base URL cannot be null or empty");
         }
@@ -32,46 +26,13 @@ public class APIRetrofitClient {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-            // Tạo TrustManager bỏ qua kiểm tra chứng chỉ
-            final TrustManager[] trustAllCerts = new TrustManager[]{
-                    new X509TrustManager() {
-                        @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                        }
-
-                        @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                        }
-
-                        @Override
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return new java.security.cert.X509Certificate[]{};
-                        }
-                    }
-            };
-
-            // Cài đặt SSLContext để bỏ qua kiểm tra chứng chỉ
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            try {
-                final SSLContext sslContext = SSLContext.getInstance("SSL");
-                sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-                final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-
-                builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
-                builder.hostnameVerifier((hostname, session) -> true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            OkHttpClient okHttpClient = builder
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .addInterceptor(loggingInterceptor)
                     .addInterceptor(chain -> {
-                        Request originalRequest = chain.request();
-                        Request newRequest = originalRequest.newBuilder()
+                        return chain.proceed(chain.request().newBuilder()
                                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36")
-                                .header("Cookie", "__test=a4fbdc96fd753dc15a6fff32c495c7e9") // Thêm cookie tại đây
-                                .build();
-                        return chain.proceed(newRequest);
+                                .header("Cookie", "__test=a4fbdc96fd753dc15a6fff32c495c7e9")
+                                .build());
                     })
                     .readTimeout(30, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
