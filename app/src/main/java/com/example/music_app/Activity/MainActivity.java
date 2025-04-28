@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager.setAdapter(adapter);
 
-
         // Sử dụng TabLayoutMediator để thiết lập tiêu đề
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             tab.setText(adapter.getTitle(position));
