@@ -1,12 +1,24 @@
 package com.example.music_app.Server;
 
-/**
- * Service class to provide API client for data operations.
- */
-public class APIService {
-    private static final String BASE_URL = "http://tiep.lovestoblog.com/Server/";
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.POST;
 
-    public static Dataservice getService() {
-        return APIRetrofitClient.getClient(BASE_URL).create(Dataservice.class);
-    }
+public interface APIService {
+    @POST("/api/register")
+    @FormUrlEncoded
+    Call<String> registerUser(
+            @Field("username") String username,
+            @Field("email") String email,
+            @Field("password") String password
+    );
+
+    @POST("/api/login")
+    @FormUrlEncoded
+    Call<ResponseBody> loginUser(
+            @Field("email") String email,
+            @Field("password") String password
+    );
 }

@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 import com.example.music_app.Adapter.BannerAdapter;
 import com.example.music_app.Model.Quangcao;
-import com.example.music_app.Server.APIService;
 import com.example.music_app.databinding.FragmentBannerBinding;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,7 @@ public class fragment_banner extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentBannerBinding.inflate(inflater, container, false);
         initViews();
-        fetchBanners();
+//        fetchBanners();
         return binding.getRoot();
     }
 
@@ -48,32 +47,32 @@ public class fragment_banner extends Fragment {
         circleIndicator = binding.indicatordefault;
     }
 
-    private void fetchBanners() {
-        binding.progressBar.setVisibility(View.VISIBLE);
-        APIService.getService().GetDataBanner().enqueue(new Callback<List<Quangcao>>() {
-            @Override
-            public void onResponse(Call<List<Quangcao>> call, Response<List<Quangcao>> response) {
-                binding.progressBar.setVisibility(View.GONE);
-                if (response.isSuccessful()) {
-                    List<Quangcao> banners = response.body();
-                    if (banners == null || banners.isEmpty()) {
-                        showToast("No banners available");
-                        return;
-                    }
-                    setupBannerAdapter(banners);
-                    setupAutoSlide();
-                } else {
-                    showToast("Failed to load banners");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Quangcao>> call, Throwable t) {
-                binding.progressBar.setVisibility(View.GONE);
-                showToast("Failed to load banners");
-            }
-        });
-    }
+//    private void fetchBanners() {
+//        binding.progressBar.setVisibility(View.VISIBLE);
+//        APIService.getService().GetDataBanner().enqueue(new Callback<List<Quangcao>>() {
+//            @Override
+//            public void onResponse(Call<List<Quangcao>> call, Response<List<Quangcao>> response) {
+//                binding.progressBar.setVisibility(View.GONE);
+//                if (response.isSuccessful()) {
+//                    List<Quangcao> banners = response.body();
+//                    if (banners == null || banners.isEmpty()) {
+//                        showToast("No banners available");
+//                        return;
+//                    }
+//                    setupBannerAdapter(banners);
+//                    setupAutoSlide();
+//                } else {
+//                    showToast("Failed to load banners");
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Quangcao>> call, Throwable t) {
+//                binding.progressBar.setVisibility(View.GONE);
+//                showToast("Failed to load banners");
+//            }
+//        });
+//    }
 
     private void setupBannerAdapter(List<Quangcao> banners) {
         bannerAdapter = new BannerAdapter(requireContext(), new ArrayList<>(banners), quangcao -> {
