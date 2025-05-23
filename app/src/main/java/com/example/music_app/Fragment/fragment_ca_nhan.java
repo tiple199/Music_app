@@ -52,7 +52,7 @@ public class fragment_ca_nhan extends Fragment {
             }
         });
 
-        // Xu ly hien username len trang ca nhan
+        // Xu ly hien username trong database
         TextView usernameText = view.findViewById(R.id.usernameText);
 
         // Lấy tên từ SharedPreferences

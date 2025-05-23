@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nguyễn Đa Nhất"
+        android:textAllCaps="true"
         android:textColor="@color/secondColor"
         android:textSize="18sp"
         android:textStyle="bold"

@@ -111,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                         String responseStr = response.body().string();
                         JSONObject jsonObject = new JSONObject(responseStr);
                         String username = jsonObject.getString("username");
+                        String userId = jsonObject.getString("userId");
 
                         Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
 
@@ -118,7 +119,8 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putBoolean("isLoggedIn", true);
                         editor.putString("email", email);
-                        editor.putString("username", username); // LƯU username ở đây
+                        editor.putString("username", username);
+                        editor.putString("userId", userId);
                         editor.apply();
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
