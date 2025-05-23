@@ -9,6 +9,7 @@ import okhttp3.Protocol;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Utility class to provide Retrofit client for API calls.
@@ -17,6 +18,15 @@ public class APIRetrofitClient {
     private static volatile Retrofit retrofit = null;
     private static String currentBaseUrl = null;
 
+    public static Retrofit getClient() {
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl("http://192.168.0.197:8080/")
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .build();
+        }
+        return retrofit;
+    }
     public static synchronized Retrofit getClient(String baseUrl) {
         if (baseUrl == null || baseUrl.trim().isEmpty()) {
             throw new IllegalArgumentException("Base URL cannot be null or empty");

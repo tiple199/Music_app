@@ -1,5 +1,6 @@
 package com.example.music_app.Adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +35,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     @Override
     public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
         Song song = songList.get(position);
-        holder.tvSongName.setText(song.getTitle());
+        holder.tvSongName.setText(song.getTitle());  // Sửa ở đây
         holder.tvArtist.setText(song.getArtist());
-
     }
 
     @Override
@@ -52,10 +52,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         public SongViewHolder(@NonNull View itemView) {
             super(itemView);
             imgSong = itemView.findViewById(R.id.ivThumbnail);
-            tvSongName = itemView.findViewById(R.id.tvSongTitle);
+            tvSongName = itemView.findViewById(R.id.tvSongTitle); // Đây là view từ item_song.xml
             tvArtist = itemView.findViewById(R.id.tvArtist);
             imgMore = itemView.findViewById(R.id.btnMore);
         }
     }
 }
+
 
