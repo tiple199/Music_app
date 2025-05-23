@@ -10,6 +10,7 @@ import com.example.music_app.Model.Artist;
 import com.example.music_app.Model.Song;
 import java.util.List;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 public interface APIService {
     @POST("/api/register")
@@ -29,8 +30,12 @@ public interface APIService {
     @GET("songs")  // endpoint backend trả danh sách bài hát
     Call<List<Song>> getAllSongs();
 
+    @GET("/api/favorites")
+    Call<List<Song>> getFavoriteSongs(@Query("userId") String userId);
+
     @GET("artists")
     Call<List<Artist>> getPopularArtists();
 
 }
+
 

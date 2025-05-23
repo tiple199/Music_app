@@ -1,6 +1,5 @@
 package com.example.music_app.Model;
 
-
 import java.util.List;
 
 public class Song {
@@ -104,5 +103,3 @@ public class Song {
         this.playListIds = playListIds;
     }
 }
-
-

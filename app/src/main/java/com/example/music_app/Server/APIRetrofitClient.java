@@ -21,7 +21,8 @@ public class APIRetrofitClient {
     public static Retrofit getClient() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.0.197:8080/")
+//                    .baseUrl("http://192.168.0.197:8080/")
+                    .baseUrl("http://10.0.2.2:8080/")
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .build();
         }

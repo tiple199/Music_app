@@ -1,5 +1,6 @@
 package com.example.music_app.Adapter;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.music_app.Model.Song;
 import com.example.music_app.R;
 
@@ -19,6 +21,7 @@ import java.util.List;
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
 
     private List<Song> songList;
+    private Context context;
 
     public SongAdapter(List<Song> songList) {
         this.songList = songList;
@@ -35,8 +38,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     @Override
     public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
         Song song = songList.get(position);
-        holder.tvSongName.setText(song.getTitle());  // Sửa ở đây
-        holder.tvArtist.setText(song.getArtist());
+        holder.tvSongName.setText(song.getTenBaiHat());  // Sửa ở đây
+        holder.tvArtist.setText(song.getCaSi());
+
+
     }
 
     @Override
@@ -51,9 +56,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
         public SongViewHolder(@NonNull View itemView) {
             super(itemView);
-            imgSong = itemView.findViewById(R.id.ivThumbnail);
-            tvSongName = itemView.findViewById(R.id.tvSongTitle); // Đây là view từ item_song.xml
-            tvArtist = itemView.findViewById(R.id.tvArtist);
+            imgSong = itemView.findViewById(R.id.imgSong);
+            tvSongName = itemView.findViewById(R.id.txtTenBaiHat);
+            tvArtist = itemView.findViewById(R.id.txtCaSi);
             imgMore = itemView.findViewById(R.id.btnMore);
         }
     }
