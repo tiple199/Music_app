@@ -1,6 +1,7 @@
 package com.example.music_app.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import com.example.music_app.Server.APIService;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -19,6 +21,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+
+import org.json.JSONObject;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -54,6 +58,16 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+
+        if (isLoggedIn) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish(); // không cho quay lại màn hình login
+        }
+
 
     }
 
@@ -95,11 +109,23 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     try {
                         String responseStr = response.body().string();
+                        JSONObject jsonObject = new JSONObject(responseStr);
+                        String username = jsonObject.getString("username");
+                        String userId = jsonObject.getString("userId");
+
                         Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+
+                        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("isLoggedIn", true);
+                        editor.putString("email", email);
+                        editor.putString("username", username);
+                        editor.putString("userId", userId);
+                        editor.apply();
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
-                        finish(); // kết thúc LoginActivity
+                        finish();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -110,6 +136,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("API_LOGIN", "Error: " + t.getMessage());
                 Toast.makeText(LoginActivity.this, "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
             }
         });

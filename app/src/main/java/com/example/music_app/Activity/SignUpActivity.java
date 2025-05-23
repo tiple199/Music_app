@@ -118,6 +118,7 @@ public class SignUpActivity extends AppCompatActivity {
                                  Toast.makeText(SignUpActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
                                  finish(); // hoặc chuyển sang LoginActivity
                              } else {
+                                 Log.d("SignUpActivity", "Lỗi: " + response.message());
                                  Toast.makeText(SignUpActivity.this, "Đăng ký thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
                              }
                          }

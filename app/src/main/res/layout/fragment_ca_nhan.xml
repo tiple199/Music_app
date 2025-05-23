@@ -16,7 +16,7 @@
         app:civ_border_color="#FFFFFF"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="40dp"
         android:layout_marginStart="16dp"/>
 
     <!-- Username -->
@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nguyễn Đa Nhất"
+        android:textAllCaps="true"
         android:textColor="@color/secondColor"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -36,8 +37,8 @@
     <!-- Logout Button -->
     <ImageView
         android:id="@+id/logoutButton"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/ic_logout"
         app:layout_constraintTop_toTopOf="@id/avatarImage"
         app:layout_constraintEnd_toEndOf="parent"
