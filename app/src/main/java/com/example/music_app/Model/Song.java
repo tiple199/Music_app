@@ -1,13 +1,15 @@
 package com.example.music_app.Model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Song {
+public class Song implements Serializable {
     private String _id;
     private String TenBaiHat;
     private String CaSi;
     private String HinhBaiHat;
     private String LinkBaiHat;
+    private String LoiBaiHat;
     private int LuotThich;
     private List<String> albumIds;
     private List<String> theLoaiIds;
@@ -101,5 +103,13 @@ public class Song {
 
     public void setPlayListIds(List<String> playListIds) {
         this.playListIds = playListIds;
+    }
+
+    public String getLoiBaiHat() {
+        return LoiBaiHat;
+    }
+
+    public void setLoiBaiHat(String loiBaiHat) {
+        LoiBaiHat = loiBaiHat;
     }
 }

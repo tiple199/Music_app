@@ -27,5 +27,13 @@
         app:tabSelectedTextColor="#a845de"
         app:tabTextColor="#000000" />
 
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/miniPlayerContainer"
+        layout="@layout/layout_mini_player"
+        app:layout_constraintBottom_toTopOf="@+id/myTabLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

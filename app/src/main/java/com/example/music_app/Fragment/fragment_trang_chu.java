@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.music_app.Activity.AlbumListActivity;
 import com.example.music_app.Activity.ArtistListActivity;
 import com.example.music_app.Activity.CategoryMusicActivity;
+import com.example.music_app.Activity.MainActivity;
+import com.example.music_app.Activity.SongActivity;
 import com.example.music_app.Adapter.ArtistAdapter;
 import com.example.music_app.Adapter.SongAdapter;
 import com.example.music_app.Model.Artist;
@@ -27,6 +29,7 @@ import com.example.music_app.R;
 import com.example.music_app.Server.APIService;
 import com.example.music_app.Server.APIUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -97,7 +100,13 @@ public class fragment_trang_chu extends Fragment {
             public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     songList = response.body();
-                    songAdapter = new SongAdapter(songList);
+                    songAdapter = new SongAdapter(songList, position -> {
+                        Intent intent = new Intent(getActivity(), SongActivity.class);
+                        intent.putExtra("SONG_LIST", new ArrayList<>(songList));
+                        intent.putExtra("SELECTED_INDEX", position);
+                        startActivity(intent);
+                        getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.none);
+                    });
                     songListRecycler.setAdapter(songAdapter);
                 } else {
                     Toast.makeText(getContext(), "Không có dữ liệu bài hát", Toast.LENGTH_SHORT).show();

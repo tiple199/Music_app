@@ -82,7 +82,7 @@ public class FragmentFavorite extends Fragment {
                 public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         List<Song> songList = response.body();
-                        SongAdapter adapter = new SongAdapter(songList);
+                        SongAdapter adapter = new SongAdapter(songList,position -> {});
                         recyclerView.setAdapter(adapter);
                     } else {
                         Toast.makeText(getContext(), "Không có bài hát yêu thích", Toast.LENGTH_SHORT).show();

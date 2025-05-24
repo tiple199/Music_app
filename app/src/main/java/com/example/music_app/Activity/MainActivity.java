@@ -1,8 +1,16 @@
 package com.example.music_app.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.viewpager2.widget.ViewPager2;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.example.music_app.Adapter.MainViewPageAdapter;
 import com.example.music_app.Fragment.fragment_ca_nhan;
 import com.example.music_app.Fragment.fragment_trang_chu;
@@ -13,13 +21,37 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
 
+        setupMiniPlayer();
     }
+
+    private void setupMiniPlayer() {
+        CardView miniPlayer = findViewById(R.id.miniPlayerContainer);
+        ImageView thumbnail = findViewById(R.id.miniThumbnail);
+        TextView title = findViewById(R.id.miniTitle);
+        ImageButton playPause = findViewById(R.id.miniPlayPause);
+        // Lấy bài hát đang phát từ SharedPreferences hoặc Singleton
+        miniPlayer.setVisibility(View.VISIBLE);
+        title.setText("Tên bài đang phát");
+
+// play/pause
+        playPause.setOnClickListener(v -> {
+            // Gửi broadcast hoặc gọi đến MusicService để tạm dừng / tiếp tục
+        });
+
+// mở lại SongActivity
+        miniPlayer.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SongActivity.class);
+            startActivity(intent);
+        });
+    }
+
     private void init(){
         TabLayout tabLayout = findViewById(R.id.myTabLayout);
         ViewPager2 viewPager = findViewById(R.id.myViewPager);

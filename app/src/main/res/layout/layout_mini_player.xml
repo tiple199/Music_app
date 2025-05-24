@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/miniPlayer"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:visibility="gone"
+    android:clickable="true"
+    android:elevation="6dp"
+    android:background="@android:color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/miniThumbnail"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/playholder" />
+
+        <TextView
+            android:id="@+id/miniTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/miniThumbnail"
+            android:layout_marginStart="12dp"
+            android:text="Tên bài hát"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:maxLines="1" />
+
+        <ImageButton
+            android:id="@+id/miniPlayPause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_play" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

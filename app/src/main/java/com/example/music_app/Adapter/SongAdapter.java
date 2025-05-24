@@ -19,12 +19,14 @@ import com.example.music_app.R;
 import java.util.List;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
+    MyClickListenner myClickListenner;
 
     private List<Song> songList;
     private Context context;
 
-    public SongAdapter(List<Song> songList) {
+    public SongAdapter(List<Song> songList,MyClickListenner myClickListenner) {
         this.songList = songList;
+        this.myClickListenner = myClickListenner;
     }
 
     @NonNull
@@ -40,7 +42,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         Song song = songList.get(position);
         holder.tvSongName.setText(song.getTenBaiHat());  // Sửa ở đây
         holder.tvArtist.setText(song.getCaSi());
-
+        holder.itemView.setOnClickListener(v -> {
+            if (myClickListenner != null) {
+                myClickListenner.onItemClick(position);
+            }
+        });
 
     }
 
@@ -60,7 +66,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             tvSongName = itemView.findViewById(R.id.txtTenBaiHat);
             tvArtist = itemView.findViewById(R.id.txtCaSi);
             imgMore = itemView.findViewById(R.id.btnMore);
+
         }
+    }
+
+    public interface MyClickListenner{
+        void onItemClick(int position);
+
     }
 }
 

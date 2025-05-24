@@ -82,7 +82,9 @@ public class CategoryMusicActivity extends AppCompatActivity {
         // Lấy danh sách bài hát theo category (cần implement)
         List<Song> songList = getSongsByCategory();
 
-        SongAdapter adapter = new SongAdapter(songList);
+        SongAdapter adapter = new SongAdapter(songList,position -> {
+
+        });
         recyclerViewSongs.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewSongs.setAdapter(adapter);
     }
