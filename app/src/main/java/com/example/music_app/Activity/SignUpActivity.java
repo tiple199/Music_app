@@ -14,8 +14,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.music_app.R;
-import com.example.music_app.Server.APIRetrofitClient;
-import com.example.music_app.Server.APIService;
+import com.example.music_app.Service.APIRetrofitClient;
+import com.example.music_app.Service.APIService;
 
 import retrofit2.Call;
 import retrofit2.Callback;

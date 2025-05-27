@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateMiniPlayerState() {
         if (miniPlayerContainer == null || tabLayout == null) {
-            // Nếu các view chưa được khởi tạo (ví dụ: gọi quá sớm), thì không làm gì cả
             Log.w(TAG, "updateMiniPlayerState: Views chưa được khởi tạo.");
             return;
         }
@@ -91,22 +90,15 @@ public class MainActivity extends AppCompatActivity {
         int currentTabPosition = tabLayout.getSelectedTabPosition();
         Song song = MusicService.getCurrentSong();
 
-        // Log.d(TAG, "updateMiniPlayerState: Current Tab Position = " + currentTabPosition);
-        // Log.d(TAG, "updateMiniPlayerState: Current Song = " + (song != null ? song.getTenBaiHat() : "null"));
-
-
         if (currentTabPosition == 0) { // Tab "Khám phá" (vị trí 0)
             miniPlayerContainer.setVisibility(View.GONE);
-            // Log.d(TAG, "updateMiniPlayerState: Hiding miniPlayer for Khám Phá tab.");
         } else { // Các tab khác
             if (song != null) {
                 miniPlayerContainer.setVisibility(View.VISIBLE);
                 if (miniTitle != null) miniTitle.setText(song.getTenBaiHat());
                 updateMiniPlayerPlayPauseButtonState();
-                // Log.d(TAG, "updateMiniPlayerState: Showing miniPlayer for other tabs, song: " + song.getTenBaiHat());
             } else {
                 miniPlayerContainer.setVisibility(View.GONE);
-                // Log.d(TAG, "updateMiniPlayerState: Hiding miniPlayer for other tabs, no song.");
             }
         }
     }
@@ -161,15 +153,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                // Nếu người dùng chọn lại tab "Khám phá", miniPlayer vẫn nên ẩn
                 Log.d(TAG, "Tab reselected: " + tab.getPosition() + " - " + tab.getText());
                 updateMiniPlayerState(); // Đảm bảo trạng thái đúng khi chọn lại
             }
         });
 
-        // Đảm bảo viewPager hiển thị tab "Trang chủ" (vị trí 1) làm tab mặc định nếu muốn
-        // viewPager.setCurrentItem(1, false); // false để không có animation
-        // Nếu bạn muốn "Khám phá" là tab mặc định (vị trí 0), thì không cần dòng trên.
-        // Và onTabSelected sẽ được gọi cho tab mặc định khi listener được attach.
+        // --- THÊM DÒNG NÀY ĐỂ ĐẶT TAB MẶC ĐỊNH ---
+        // Tab "Trang chủ" của bạn ở vị trí 1 (Khám phá: 0, Trang chủ: 1, Cá nhân: 2)
+        viewPager.setCurrentItem(1, false); // Đặt tab "Trang chủ" làm tab mặc định
+        // false: để không có hiệu ứng cuộn khi thiết lập
     }
 }
