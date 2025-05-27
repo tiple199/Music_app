@@ -36,6 +36,9 @@ public interface APIService {
     @GET("artists")
     Call<List<Artist>> getPopularArtists();
 
+    @GET("/api/song/random")
+    Call<Song> getRandomSong();
+
 }
 
 

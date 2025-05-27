@@ -1,7 +1,220 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f00">
+    android:fitsSystemWindows="true"
+    android:background="#212121">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/top_nav_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tab_for_you"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dành cho bạn"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:layout_marginEnd="16dp"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/icon_search"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_search"  app:tint="@android:color/white" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/song_title_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tháp rơi tự do- LBI Lợi Bì"
+        android:textColor="@android:color/white"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_below="@id/top_nav_bar"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/btn_lyrics"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:text="Lời bài hát"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:background="@drawable/rounded_button_background" android:layout_below="@id/song_title_header"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"/>
+
+    <FrameLayout
+        android:id="@+id/media_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/btn_lyrics"
+        android:layout_above="@+id/song_info_container"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="15dp"
+        android:background="#424242"> <ImageView
+        android:id="@+id/image_song_banner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/your_song_image" android:scaleType="centerCrop"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="跳\n楼\n机"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical|start"
+            android:layout_marginStart="32dp"
+            android:lineSpacingMultiplier="0.8"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LBI 利比"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="32dp"/>
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/song_info_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_controls_container"
+        android:layout_marginBottom="5dp"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/song_title_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tháp rơi tự do"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/artist_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/song_title_main"
+            android:text="LBI Lợi Bì"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_follow"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:backgroundTint="@android:color/white"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="Theo dõi"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_controls_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/icon_favorite"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_favorite" app:tint="@android:color/white"
+                android:layout_marginEnd="16dp"/>
+
+            <ImageView
+                android:id="@+id/icon_comment"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_comment" app:tint="@android:color/white"
+                android:layout_marginEnd="16dp"/>
+
+            <ImageView
+                android:id="@+id/icon_share"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_share" app:tint="@android:color/white"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:id="@+id/icon_download"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_download" app:tint="@android:color/white"
+                android:layout_marginEnd="16dp"/>
+
+            <ImageView
+                android:id="@+id/icon_playlist"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_feature" app:tint="@android:color/white"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            >
+            <ImageButton
+                android:id="@+id/btnPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_play"
+                android:background="#212121"
+                />
+            <SeekBar
+                android:id="@+id/seekbar_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:progressTint="@android:color/white"
+                android:thumbTint="@android:color/white"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="17dp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

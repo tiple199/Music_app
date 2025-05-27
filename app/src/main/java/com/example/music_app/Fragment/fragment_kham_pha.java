@@ -17,6 +17,8 @@ public class fragment_kham_pha extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_kham_pha,container,false);
+
+
         return view;
     }
 }
