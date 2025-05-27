@@ -13,7 +13,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface APIService {
-    @POST("/api/register")
+    @POST("register")
     @FormUrlEncoded
     Call<String> registerUser(
             @Field("username") String username,
@@ -21,7 +21,7 @@ public interface APIService {
             @Field("password") String password
     );
 
-    @POST("/api/login")
+    @POST("login")
     @FormUrlEncoded
     Call<ResponseBody> loginUser(
             @Field("email") String email,
@@ -30,13 +30,13 @@ public interface APIService {
     @GET("songs")  // endpoint backend trả danh sách bài hát
     Call<List<Song>> getAllSongs();
 
-    @GET("/api/favorites")
+    @GET("favorites")
     Call<List<Song>> getFavoriteSongs(@Query("userId") String userId);
 
     @GET("artists")
     Call<List<Artist>> getPopularArtists();
 
-    @GET("/api/song/random")
+    @GET("song/random")
     Call<Song> getRandomSong();
 
 }

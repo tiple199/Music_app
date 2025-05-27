@@ -2,7 +2,6 @@ package com.example.music_app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.music_app.Activity.AlbumListActivity;
 import com.example.music_app.Activity.ArtistListActivity;
 import com.example.music_app.Activity.CategoryMusicActivity;
-import com.example.music_app.Activity.MainActivity;
 import com.example.music_app.Activity.SongActivity;
 import com.example.music_app.Adapter.ArtistAdapter;
 import com.example.music_app.Adapter.SongAdapter;
 import com.example.music_app.Model.Artist;
 import com.example.music_app.Model.Song;
 import com.example.music_app.R;
+import com.example.music_app.Server.APIRetrofitClient;
 import com.example.music_app.Server.APIService;
-import com.example.music_app.Server.APIUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +90,7 @@ public class fragment_trang_chu extends Fragment {
     }
 
     private void loadSongs() {
-        APIService dataservice = APIUtil.getService();
+        APIService dataservice = APIRetrofitClient.getClient().create(APIService.class);
         Call<List<Song>> call = dataservice.getAllSongs();
 
         call.enqueue(new Callback<List<Song>>() {
@@ -121,7 +119,7 @@ public class fragment_trang_chu extends Fragment {
     }
 
     private void loadPopularArtists() {
-        APIService dataservice = APIUtil.getService();
+        APIService dataservice = APIRetrofitClient.getClient().create(APIService.class);
         Call<List<Artist>> call = dataservice.getPopularArtists();
 
         call.enqueue(new Callback<List<Artist>>() {
