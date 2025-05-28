@@ -5,22 +5,25 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.music_app.Activity.AlbumListActivity;
-import com.example.music_app.Activity.ArtistListActivity;
+import com.example.music_app.Activity.AlbumSongsActivity;
+import com.example.music_app.Activity.ArtistSongsActivity;
 import com.example.music_app.Activity.CategoryMusicActivity;
+import com.example.music_app.Activity.SearchActivity;
 import com.example.music_app.Activity.SongActivity;
+import com.example.music_app.Adapter.AlbumAdapter;
 import com.example.music_app.Adapter.ArtistAdapter;
 import com.example.music_app.Adapter.SongAdapter;
+import com.example.music_app.Model.Album;
 import com.example.music_app.Model.Artist;
 import com.example.music_app.Model.Song;
 import com.example.music_app.R;
@@ -35,6 +38,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class fragment_trang_chu extends Fragment {
+
     private View view;
     private RecyclerView songListRecycler;
     private SongAdapter songAdapter;
@@ -43,46 +47,54 @@ public class fragment_trang_chu extends Fragment {
     private RecyclerView popularArtistsRecyclerView;
     private ArtistAdapter artistAdapter;
 
+    private RecyclerView recyclerViewAlbumHot;
+    private AlbumAdapter albumAdapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_trang_chu, container, false);
 
-        // Ánh xạ TextView
-        TextView seeMoreAlbums = view.findViewById(R.id.seeMoreAlbums);
-        TextView seeMoreArtists = view.findViewById(R.id.seeMoreArtists);
+        // 🔍 Tìm kiếm: mở SearchActivity
+        EditText etSearch = view.findViewById(R.id.etSearch);
+        etSearch.setFocusable(false);
+        etSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), SearchActivity.class);
+            startActivity(intent);
+        });
 
-        // Ánh xạ layout chủ đề nhạc
-        ConstraintLayout category1 = view.findViewById(R.id.category1);
-        ConstraintLayout category2 = view.findViewById(R.id.category2);
-        ConstraintLayout category3 = view.findViewById(R.id.category3);
-        ConstraintLayout category4 = view.findViewById(R.id.category4);
+        // 🎧 Chủ đề
+        TextView category1 = view.findViewById(R.id.category1);
+        TextView category2 = view.findViewById(R.id.category2);
+        TextView category3 = view.findViewById(R.id.category3);
+        TextView category4 = view.findViewById(R.id.category4);
 
-        // Thiết lập sự kiện click cho các danh mục
-        category1.setOnClickListener(v -> openCategoryMusicActivity("Nhạc trẻ", "Top nhạc trẻ hay nhất", 10));
-        category2.setOnClickListener(v -> openCategoryMusicActivity("KPOP", "Top bài hát KPOP", 15));
-        category3.setOnClickListener(v -> openCategoryMusicActivity("Chinese", "Top nhạc Hoa", 8));
-        category4.setOnClickListener(v -> openCategoryMusicActivity("Remix", "Top bản remix hay nhất", 12));
+        category1.setOnClickListener(v -> openCategoryMusicActivity("64a111aa111aa111aa111aaa", "Nhạc trẻ", "Top nhạc trẻ hay nhất", 5));
+        category2.setOnClickListener(v -> openCategoryMusicActivity("64d444dd444dd444dd444ddd", "Remix", "Top bản remix hay nhất", 5));
+        category3.setOnClickListener(v -> openCategoryMusicActivity("64c333cc333cc333cc333ccc", "Chinese", "Top nhạc Hoa", 5));
+        category4.setOnClickListener(v -> openCategoryMusicActivity("64b222bb222bb222bb222bbb", "KPOP", "Top bài hát KPOP", 5));
 
-        // Sự kiện "Xem thêm"
-        seeMoreAlbums.setOnClickListener(v -> startActivity(new Intent(getContext(), AlbumListActivity.class)));
-        seeMoreArtists.setOnClickListener(v -> startActivity(new Intent(getContext(), ArtistListActivity.class)));
-
-        // Load danh sách bài hát
+        // 🎵 Danh sách bài hát
         songListRecycler = view.findViewById(R.id.songListRecycler);
         songListRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         loadSongs();
 
-        // Load danh sách nghệ sĩ thịnh hành
+        // 👩‍🎤 Nghệ sĩ thịnh hành
         popularArtistsRecyclerView = view.findViewById(R.id.popularArtistsRecyclerView);
         popularArtistsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         loadPopularArtists();
 
+        // 💿 Album hot
+        recyclerViewAlbumHot = view.findViewById(R.id.hotAlbumsRecyclerView);
+        recyclerViewAlbumHot.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        loadAlbumHot();
+
         return view;
     }
 
-    private void openCategoryMusicActivity(String categoryName, String description, int songCount) {
+    private void openCategoryMusicActivity(String categoryId, String categoryName, String description, int songCount) {
         Intent intent = new Intent(getActivity(), CategoryMusicActivity.class);
+        intent.putExtra("CATEGORY_ID", categoryId);
         intent.putExtra("CATEGORY_NAME", categoryName);
         intent.putExtra("DESCRIPTION", description);
         intent.putExtra("SONG_COUNT", songCount);
@@ -128,6 +140,15 @@ public class fragment_trang_chu extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Artist> artistList = response.body();
                     artistAdapter = new ArtistAdapter(getContext(), artistList);
+
+                    artistAdapter.setOnItemClickListener(artist -> {
+                        Intent intent = new Intent(getContext(), ArtistSongsActivity.class);
+                        intent.putExtra("ARTIST_ID", artist.get_id());
+                        intent.putExtra("ARTIST_NAME", artist.getTenNgheSi());
+                        intent.putExtra("ARTIST_IMAGE", artist.getHinhAnhNgheSi());
+                        startActivity(intent);
+                    });
+
                     popularArtistsRecyclerView.setAdapter(artistAdapter);
                 } else {
                     Toast.makeText(getContext(), "Không có dữ liệu nghệ sĩ", Toast.LENGTH_SHORT).show();
@@ -140,7 +161,41 @@ public class fragment_trang_chu extends Fragment {
             }
         });
     }
+
+    private void loadAlbumHot() {
+        APIService dataservice = APIRetrofitClient.getClient().create(APIService.class);
+        Call<List<Album>> call = dataservice.getAllAlbums();
+
+        call.enqueue(new Callback<List<Album>>() {
+            @Override
+            public void onResponse(Call<List<Album>> call, Response<List<Album>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Album> albumList = response.body();
+                    albumAdapter = new AlbumAdapter(getContext(), albumList);
+
+                    albumAdapter.setOnItemClickListener(album -> {
+                        Intent intent = new Intent(getContext(), AlbumSongsActivity.class);
+                        intent.putExtra("ALBUM_ID", album.get_id());
+                        intent.putExtra("ALBUM_NAME", album.getTenAlbum());
+                        intent.putExtra("ALBUM_IMAGE", album.getHinhAlbum());
+                        startActivity(intent);
+                    });
+
+                    recyclerViewAlbumHot.setAdapter(albumAdapter);
+                } else {
+                    Toast.makeText(getContext(), "Không có dữ liệu album", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Album>> call, Throwable t) {
+                Toast.makeText(getContext(), "Lỗi kết nối album: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
+
+
 
 
 

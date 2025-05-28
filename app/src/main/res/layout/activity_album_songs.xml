@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:gravity="center_horizontal">
+
+        <!-- Ảnh album -->
+        <ImageView
+            android:id="@+id/imgAlbum"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginBottom="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_chinese"
+            android:background="@drawable/bg_artist_circle" />
+
+        <!-- Tên album -->
+        <TextView
+            android:id="@+id/txtTenAlbum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên Album"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Mô tả hoặc người nghe -->
+        <TextView
+            android:id="@+id/txtMoTaAlbum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="16 bài hát • 2024"
+            android:textSize="14sp"
+            android:textColor="#888888"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Tiêu đề danh sách -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Danh sách bài hát"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Danh sách bài hát -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewAlbumSongs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:overScrollMode="never" />
+    </LinearLayout>
+</ScrollView>
+

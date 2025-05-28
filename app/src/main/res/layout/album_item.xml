@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:gravity="center_horizontal">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_gravity="center"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true">
+
+        <ImageView
+            android:id="@+id/imgHinhAlbum"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="Ảnh album" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/txtTenAlbum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ruby (Explicit)"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="6dp" />
+
+    <TextView
+        android:id="@+id/txtTenCaSi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="JENNIE - 2025"
+        android:textSize="14sp"
+        android:textColor="#888888" />
+</LinearLayout>
+

@@ -1,7 +1,6 @@
 package com.example.music_app.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +18,11 @@ import com.example.music_app.R;
 import java.util.List;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
-    MyClickListenner myClickListenner;
 
     private List<Song> songList;
-    private Context context;
+    private MyClickListenner myClickListenner;
 
-    public SongAdapter(List<Song> songList,MyClickListenner myClickListenner) {
+    public SongAdapter(List<Song> songList, MyClickListenner myClickListenner) {
         this.songList = songList;
         this.myClickListenner = myClickListenner;
     }
@@ -40,22 +38,30 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     @Override
     public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
         Song song = songList.get(position);
-        holder.tvSongName.setText(song.getTenBaiHat());  // Sửa ở đây
+
+        // Set tên và ca sĩ
+        holder.tvSongName.setText(song.getTenBaiHat());
         holder.tvArtist.setText(song.getCaSi());
+
+        // Load ảnh bài hát bằng Glide
+        Glide.with(holder.itemView.getContext())
+                .load(song.getHinhBaiHat())
+                .into(holder.imgSong);
+
+        // Xử lý click vào item
         holder.itemView.setOnClickListener(v -> {
             if (myClickListenner != null) {
                 myClickListenner.onItemClick(position);
             }
         });
-
     }
 
     @Override
     public int getItemCount() {
-        return songList.size();
+        return songList != null ? songList.size() : 0;
     }
 
-    static class SongViewHolder extends RecyclerView.ViewHolder {
+    public static class SongViewHolder extends RecyclerView.ViewHolder {
         ImageView imgSong;
         TextView tvSongName, tvArtist;
         ImageButton imgMore;
@@ -66,14 +72,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             tvSongName = itemView.findViewById(R.id.txtTenBaiHat);
             tvArtist = itemView.findViewById(R.id.txtCaSi);
             imgMore = itemView.findViewById(R.id.btnMore);
-
         }
     }
 
-    public interface MyClickListenner{
+    // Giao diện bắt sự kiện click
+    public interface MyClickListenner {
         void onItemClick(int position);
-
     }
 }
+
 
 
