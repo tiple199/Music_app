@@ -22,24 +22,34 @@
         android:layout_marginTop="35dp"
         />
 
-    <!-- Album cover -->
+    <!-- More-options button -->
+
+    <ImageButton
+        android:id="@+id/btnMore"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_more_horiz"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/coverImage"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:background="@drawable/rounded_img_tim_background"
-        android:src="@drawable/favorite_icon"
+        android:background="@drawable/avartar"
         app:layout_constraintTop_toBottomOf="@id/btnBack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
-    <!-- Title -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Danh Sách Ưa Thích"
+        android:text="Danh Sách Phát"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/secondColor"
@@ -50,7 +60,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"/>
 
-    <!-- Small avatar -->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivSmallAvatar"
         android:layout_width="24dp"
@@ -61,10 +70,6 @@
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="@id/tvTitle"
         android:layout_marginTop="8dp"/>
-
-    <!-- Username -->
-
-    <!-- Action buttons: Play, Search, Download -->
 
     <TextView
         android:id="@+id/tvUsername"
@@ -106,7 +111,7 @@
         android:layout_height="36dp"
         android:layout_marginEnd="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_download"
+        android:src="@drawable/download_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/btnPlayAll" />
 
@@ -125,7 +130,7 @@
 
     <!-- RecyclerView for song list -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSongsFavotite"
+        android:id="@+id/rvSongsPlaylist"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/tvSongCount"
