@@ -55,6 +55,9 @@ public interface APIService {
     @GET("songs/search")
     Call<List<Song>> searchSongs(@Query("keyword") String keyword);
 
+    @GET("songs/top-liked-songs")
+    Call<List<Song>> getTopLikedSongs();
+
 
 
 }

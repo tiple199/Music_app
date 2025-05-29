@@ -49,11 +49,15 @@ public class fragment_trang_chu extends Fragment {
 
     private RecyclerView recyclerViewAlbumHot;
     private AlbumAdapter albumAdapter;
+    private RecyclerView topSongsRecyclerView;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_trang_chu, container, false);
+
+
 
         // 🔍 Tìm kiếm: mở SearchActivity
         EditText etSearch = view.findViewById(R.id.etSearch);
@@ -75,9 +79,14 @@ public class fragment_trang_chu extends Fragment {
         category4.setOnClickListener(v -> openCategoryMusicActivity("64b222bb222bb222bb222bbb", "KPOP", "Top bài hát KPOP", 5));
 
         // 🎵 Danh sách bài hát
-        songListRecycler = view.findViewById(R.id.songListRecycler);
-        songListRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        loadSongs();
+//        songListRecycler = view.findViewById(R.id.songListRecycler);
+//        songListRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+//        loadSongs();
+        topSongsRecyclerView = view.findViewById(R.id.songListRecycler);
+        topSongsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
+        loadTopLikedSongs();
 
         // 👩‍🎤 Nghệ sĩ thịnh hành
         popularArtistsRecyclerView = view.findViewById(R.id.popularArtistsRecyclerView);
@@ -101,34 +110,34 @@ public class fragment_trang_chu extends Fragment {
         startActivity(intent);
     }
 
-    private void loadSongs() {
-        APIService dataservice = APIRetrofitClient.getClient().create(APIService.class);
-        Call<List<Song>> call = dataservice.getAllSongs();
-
-        call.enqueue(new Callback<List<Song>>() {
-            @Override
-            public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    songList = response.body();
-                    songAdapter = new SongAdapter(songList, position -> {
-                        Intent intent = new Intent(getActivity(), SongActivity.class);
-                        intent.putExtra("SONG_LIST", new ArrayList<>(songList));
-                        intent.putExtra("SELECTED_INDEX", position);
-                        startActivity(intent);
-                        getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.none);
-                    });
-                    songListRecycler.setAdapter(songAdapter);
-                } else {
-                    Toast.makeText(getContext(), "Không có dữ liệu bài hát", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Song>> call, Throwable t) {
-                Toast.makeText(getContext(), "Lỗi kết nối bài hát: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+//    private void loadSongs() {
+//        APIService dataservice = APIRetrofitClient.getClient().create(APIService.class);
+//        Call<List<Song>> call = dataservice.getAllSongs();
+//
+//        call.enqueue(new Callback<List<Song>>() {
+//            @Override
+//            public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    songList = response.body();
+//                    songAdapter = new SongAdapter(songList, position -> {
+//                        Intent intent = new Intent(getActivity(), SongActivity.class);
+//                        intent.putExtra("SONG_LIST", new ArrayList<>(songList));
+//                        intent.putExtra("SELECTED_INDEX", position);
+//                        startActivity(intent);
+//                        getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.none);
+//                    });
+//                    songListRecycler.setAdapter(songAdapter);
+//                } else {
+//                    Toast.makeText(getContext(), "Không có dữ liệu bài hát", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Song>> call, Throwable t) {
+//                Toast.makeText(getContext(), "Lỗi kết nối bài hát: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
     private void loadPopularArtists() {
         APIService dataservice = APIRetrofitClient.getClient().create(APIService.class);
@@ -193,6 +202,34 @@ public class fragment_trang_chu extends Fragment {
             }
         });
     }
+    private void loadTopLikedSongs() {
+        APIService apiService = APIRetrofitClient.getClient().create(APIService.class);
+        Call<List<Song>> call = apiService.getTopLikedSongs();
+
+        call.enqueue(new Callback<List<Song>>() {
+            @Override
+            public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Song> topSongs = response.body();
+
+                    SongAdapter adapter = new SongAdapter(topSongs, position -> {
+                        Intent intent = new Intent(getActivity(), SongActivity.class);
+                        intent.putExtra("SONG_LIST", new ArrayList<>(topSongs));
+                        intent.putExtra("SELECTED_INDEX", position);
+                        startActivity(intent);
+                    });
+
+                    topSongsRecyclerView.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Song>> call, Throwable t) {
+                Toast.makeText(getContext(), "Lỗi khi tải bảng xếp hạng", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
 
 

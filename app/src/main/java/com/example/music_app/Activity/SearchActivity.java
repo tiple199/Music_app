@@ -61,7 +61,7 @@ public class SearchActivity extends AppCompatActivity {
                     (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN)) {
                 String keyword = etSearchInput.getText().toString().trim();
                 if (!keyword.isEmpty()) {
-                    searchSongs(keyword);
+                    fetchSongsSearch(keyword);
                 } else {
                     Toast.makeText(SearchActivity.this, "Nhập từ khóa để tìm kiếm", Toast.LENGTH_SHORT).show();
                 }
@@ -69,6 +69,8 @@ public class SearchActivity extends AppCompatActivity {
             }
             return false;
         });
+
+
     }
 
     private void searchSongs(String keyword) {
@@ -93,5 +95,38 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
     }
+    private void fetchSongsSearch(String keyword) {
+        APIService apiService = APIRetrofitClient.getClient().create(APIService.class);
+        Call<List<Song>> call = apiService.searchSongs(keyword);
+
+        call.enqueue(new Callback<List<Song>>() {
+            @Override
+            public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    songList = response.body();
+
+                    songAdapter = new SongAdapter(songList, position -> {
+                        Intent intent = new Intent(SearchActivity.this, SongActivity.class);
+                        intent.putExtra("SONG_LIST", new ArrayList<>(songList)); // truyền danh sách bài hát
+                        intent.putExtra("SELECTED_INDEX", position);            // truyền vị trí bài hát
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_up, R.anim.none);
+                    });
+
+                    rvSearchResults.setAdapter(songAdapter);
+                } else {
+                    Toast.makeText(SearchActivity.this, "Không tìm thấy bài hát nào", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Song>> call, Throwable t) {
+                Toast.makeText(SearchActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
 }
 

@@ -1,5 +1,6 @@
 package com.example.music_app.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.example.music_app.R;
 import com.example.music_app.Server.APIRetrofitClient;
 import com.example.music_app.Server.APIService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -73,9 +75,15 @@ public class ArtistSongsActivity extends AppCompatActivity {
             public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     songList = response.body();
+
                     songAdapter = new SongAdapter(songList, position -> {
-                        // Tuỳ chọn: mở SongActivity
+                        Intent intent = new Intent(ArtistSongsActivity.this, SongActivity.class);
+                        intent.putExtra("SONG_LIST", new ArrayList<>(songList));
+                        intent.putExtra("SELECTED_INDEX", position);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_up, R.anim.none);
                     });
+
                     recyclerView.setAdapter(songAdapter);
                 } else {
                     Toast.makeText(ArtistSongsActivity.this, "Không có bài hát nào", Toast.LENGTH_SHORT).show();
@@ -88,6 +96,7 @@ public class ArtistSongsActivity extends AppCompatActivity {
             }
         });
     }
+
 }
 
 

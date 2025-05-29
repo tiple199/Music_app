@@ -17,6 +17,7 @@ import com.example.music_app.R;
 import com.example.music_app.Server.APIRetrofitClient;
 import com.example.music_app.Server.APIService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -27,6 +28,7 @@ public class AlbumSongsActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private SongAdapter songAdapter;
+    private List<Song> songList;
 
     private TextView txtTenAlbum;
     private ImageView imgAlbum;
@@ -36,21 +38,24 @@ public class AlbumSongsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album_songs);
 
+        // Ánh xạ view
         txtTenAlbum = findViewById(R.id.txtTenAlbum);
         imgAlbum = findViewById(R.id.imgAlbum);
         recyclerView = findViewById(R.id.recyclerViewAlbumSongs);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Lấy dữ liệu từ Intent
-        String albumId = getIntent().getStringExtra("ALBUM_ID");
-        String albumName = getIntent().getStringExtra("ALBUM_NAME");
-        String albumImage = getIntent().getStringExtra("ALBUM_IMAGE");
+        // Nhận dữ liệu từ Intent
+        Intent intent = getIntent();
+        String albumId = intent.getStringExtra("ALBUM_ID");
+        String albumName = intent.getStringExtra("ALBUM_NAME");
+        String albumImage = intent.getStringExtra("ALBUM_IMAGE");
 
-        // Set UI
+        // Hiển thị thông tin album
         txtTenAlbum.setText(albumName);
         Glide.with(this).load(albumImage).into(imgAlbum);
 
-        if (albumId != null) {
+        // Lấy danh sách bài hát từ API
+        if (albumId != null && !albumId.isEmpty()) {
             fetchSongsByAlbum(albumId);
         } else {
             Toast.makeText(this, "Không có ID album", Toast.LENGTH_SHORT).show();
@@ -65,19 +70,19 @@ public class AlbumSongsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Song> songList = response.body();
+                    songList = response.body();
 
-                    // 👉 Truyền MyClickListenner vào Adapter để xử lý khi click bài hát
                     songAdapter = new SongAdapter(songList, position -> {
-                        Song selectedSong = songList.get(position);
                         Intent intent = new Intent(AlbumSongsActivity.this, SongActivity.class);
-                        intent.putExtra("song", selectedSong); // Song implements Serializable
+                        intent.putExtra("SONG_LIST", new ArrayList<>(songList)); // truyền danh sách
+                        intent.putExtra("SELECTED_INDEX", position); // truyền vị trí được chọn
                         startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_up, R.anim.none);
                     });
 
                     recyclerView.setAdapter(songAdapter);
                 } else {
-                    Toast.makeText(AlbumSongsActivity.this, "Không có bài hát nào trong album này", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AlbumSongsActivity.this, "Album không có bài hát nào", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -87,6 +92,8 @@ public class AlbumSongsActivity extends AppCompatActivity {
             }
         });
     }
+
 }
+
 
 
