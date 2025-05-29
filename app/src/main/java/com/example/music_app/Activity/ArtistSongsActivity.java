@@ -2,6 +2,7 @@ package com.example.music_app.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,8 +15,8 @@ import com.bumptech.glide.Glide;
 import com.example.music_app.Adapter.SongAdapter;
 import com.example.music_app.Model.Song;
 import com.example.music_app.R;
-import com.example.music_app.Server.APIRetrofitClient;
-import com.example.music_app.Server.APIService;
+import com.example.music_app.Service.APIRetrofitClient;
+import com.example.music_app.Service.APIService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,10 @@ public class ArtistSongsActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewSongs);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Xử lý nút quay lại
+        ImageButton btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> finish());
 
         txtTenNgheSi = findViewById(R.id.txtTenNgheSi);
         txtNguoiNghe = findViewById(R.id.txtNguoiNghe);

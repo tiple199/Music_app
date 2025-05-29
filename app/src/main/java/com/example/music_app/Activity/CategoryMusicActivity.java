@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.music_app.Adapter.SongAdapter;
 import com.example.music_app.Model.Song;
 import com.example.music_app.R;
-import com.example.music_app.Server.APIRetrofitClient;
-import com.example.music_app.Server.APIService;
+import com.example.music_app.Service.APIRetrofitClient;
+import com.example.music_app.Service.APIService;
 
 import java.util.ArrayList;
 import java.util.List;

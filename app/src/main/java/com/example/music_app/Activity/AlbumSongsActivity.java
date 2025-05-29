@@ -2,6 +2,7 @@ package com.example.music_app.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,8 +15,8 @@ import com.bumptech.glide.Glide;
 import com.example.music_app.Adapter.SongAdapter;
 import com.example.music_app.Model.Song;
 import com.example.music_app.R;
-import com.example.music_app.Server.APIRetrofitClient;
-import com.example.music_app.Server.APIService;
+import com.example.music_app.Service.APIRetrofitClient;
+import com.example.music_app.Service.APIService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class AlbumSongsActivity extends AppCompatActivity {
 
     private TextView txtTenAlbum;
     private ImageView imgAlbum;
+    private ImageButton btnBack; // nút quay lại
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,14 @@ public class AlbumSongsActivity extends AppCompatActivity {
         txtTenAlbum = findViewById(R.id.txtTenAlbum);
         imgAlbum = findViewById(R.id.imgAlbum);
         recyclerView = findViewById(R.id.recyclerViewAlbumSongs);
+        btnBack = findViewById(R.id.btnBack); // ánh xạ nút quay lại
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Xử lý nút quay lại
+        ImageButton btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> finish());
+
 
         // Nhận dữ liệu từ Intent
         Intent intent = getIntent();
@@ -74,8 +83,8 @@ public class AlbumSongsActivity extends AppCompatActivity {
 
                     songAdapter = new SongAdapter(songList, position -> {
                         Intent intent = new Intent(AlbumSongsActivity.this, SongActivity.class);
-                        intent.putExtra("SONG_LIST", new ArrayList<>(songList)); // truyền danh sách
-                        intent.putExtra("SELECTED_INDEX", position); // truyền vị trí được chọn
+                        intent.putExtra("SONG_LIST", new ArrayList<>(songList));
+                        intent.putExtra("SELECTED_INDEX", position);
                         startActivity(intent);
                         overridePendingTransition(R.anim.slide_in_up, R.anim.none);
                     });
@@ -92,8 +101,8 @@ public class AlbumSongsActivity extends AppCompatActivity {
             }
         });
     }
-
 }
+
 
 
 
