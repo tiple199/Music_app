@@ -1,4 +1,4 @@
-package com.example.music_app.Server;
+package com.example.music_app.Service;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

@@ -1,4 +1,4 @@
-package com.example.music_app.Server;
+package com.example.music_app.Service;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
