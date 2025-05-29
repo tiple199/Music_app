@@ -1,29 +1,38 @@
 package com.example.music_app.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.example.music_app.Adapter.SongAdapter;
-import com.example.music_app.Model.Song;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.music_app.Adapter.SongAdapter;
+import com.example.music_app.Model.Song;
 import com.example.music_app.R;
-import android.content.Intent;
-
+import com.example.music_app.Service.APIRetrofitClient;
+import com.example.music_app.Service.APIService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CategoryMusicActivity extends AppCompatActivity {
     private ImageButton btnBack;
     private ImageView imgCategory;
     private TextView tvCategoryName, tvDescription, tvSongCount;
     private RecyclerView recyclerViewSongs;
+
+    private String categoryId;
+    private List<Song> songList;
+    private SongAdapter songAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +49,7 @@ public class CategoryMusicActivity extends AppCompatActivity {
 
         // Nhận dữ liệu từ Intent
         Intent intent = getIntent();
+        categoryId = intent.getStringExtra("CATEGORY_ID");
         String categoryName = intent.getStringExtra("CATEGORY_NAME");
         String description = intent.getStringExtra("DESCRIPTION");
         int songCount = intent.getIntExtra("SONG_COUNT", 0);
@@ -49,13 +59,15 @@ public class CategoryMusicActivity extends AppCompatActivity {
         tvDescription.setText(description);
         tvSongCount.setText(songCount + " bài hát");
 
-        // Thiết lập hình ảnh tùy theo category (cần thêm logic riêng)
+        // Hình ảnh tương ứng với category
         setCategoryImage(categoryName);
 
-        // Thiết lập RecyclerView
-        setupRecyclerView();
+        // Gọi API lấy bài hát
+        loadSongsByCategory();
+        fetchSongsByTopic(categoryId);
+//        loadAllSongs();
 
-        // Sự kiện nút back
+        // Nút quay lại
         btnBack.setOnClickListener(v -> finish());
     }
 
@@ -78,20 +90,94 @@ public class CategoryMusicActivity extends AppCompatActivity {
         }
     }
 
-    private void setupRecyclerView() {
-        // Lấy danh sách bài hát theo category (cần implement)
-        List<Song> songList = getSongsByCategory();
+    private void loadSongsByCategory() {
+        APIService apiService = APIRetrofitClient.getClient().create(APIService.class);
+        Call<List<Song>> call = apiService.getSongsByCategory(categoryId); // Gọi API với id
 
-        SongAdapter adapter = new SongAdapter(songList,position -> {
+        call.enqueue(new Callback<List<Song>>() {
+            @Override
+            public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    songList = response.body(); // Lưu lại để truyền sang SongActivity
+                    songAdapter = new SongAdapter(songList, position -> {
+                        Intent intent = new Intent(CategoryMusicActivity.this, SongActivity.class);
+                        intent.putExtra("SONG_LIST", new ArrayList<>(songList)); // truyền danh sách bài hát
+                        intent.putExtra("SELECTED_INDEX", position); // truyền index bài hát được chọn
+                        startActivity(intent);
+                    }, "song_cat", null);
 
-        }, null, null);
-        recyclerViewSongs.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewSongs.setAdapter(adapter);
+                    recyclerViewSongs.setLayoutManager(new LinearLayoutManager(CategoryMusicActivity.this));
+                    recyclerViewSongs.setAdapter(songAdapter);
+                } else {
+                    Toast.makeText(CategoryMusicActivity.this, "Không có bài hát trong chủ đề này", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Song>> call, Throwable t) {
+                Toast.makeText(CategoryMusicActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private List<Song> getSongsByCategory() {
-        // Triển khai logic lấy danh sách bài hát từ server/local theo category
-        return new ArrayList<>();
+    private void loadAllSongs() {
+        APIService apiService = APIRetrofitClient.getClient().create(APIService.class);
+        Call<List<Song>> call = apiService.getAllSongs();
+
+        call.enqueue(new Callback<List<Song>>() {
+            @Override
+            public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Song> songList = response.body();
+                    SongAdapter adapter = new SongAdapter(songList, position -> {
+                        // TODO: xử lý khi chọn bài hát nếu muốn
+                    }, null, null);
+                    recyclerViewSongs.setLayoutManager(new LinearLayoutManager(CategoryMusicActivity.this));
+                    recyclerViewSongs.setAdapter(adapter);
+                } else {
+                    Toast.makeText(CategoryMusicActivity.this, "Không có dữ liệu bài hát", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Song>> call, Throwable t) {
+                Toast.makeText(CategoryMusicActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+    private void fetchSongsByTopic(String theLoaiId) {
+        APIService apiService = APIRetrofitClient.getClient().create(APIService.class);
+        Call<List<Song>> call = apiService.getSongsByCategory(theLoaiId); // Đúng tên API
+
+        call.enqueue(new Callback<List<Song>>() {
+            @Override
+            public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    songList = response.body();
+
+                    songAdapter = new SongAdapter(songList, position -> {
+                        Intent intent = new Intent(CategoryMusicActivity.this, SongActivity.class);
+                        intent.putExtra("SONG_LIST", new ArrayList<>(songList));
+                        intent.putExtra("SELECTED_INDEX", position);
+                        startActivity(intent);
+                    }, "song_top_bxh", null);
+
+                    recyclerViewSongs.setAdapter(songAdapter);
+
+                } else {
+                    Toast.makeText(CategoryMusicActivity.this, "Không có bài hát", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Song>> call, Throwable t) {
+                Toast.makeText(CategoryMusicActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 }
+
+
 

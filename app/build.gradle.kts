@@ -75,4 +75,10 @@ dependencies {
     implementation ("com.google.android.material:material:1.11.0")
     implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
 
+    //dùng để bo góc cac chủ đề
+    implementation ("androidx.cardview:cardview:1.0.0")
+
+    implementation ("androidx.gridlayout:gridlayout:1.0.0")
+
+
 }

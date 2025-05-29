@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -20,45 +19,64 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
 
     private Context context;
     private List<Artist> artistList;
+    private OnItemClickListener listener;
+
+    // Giao diện xử lý sự kiện click
+    public interface OnItemClickListener {
+        void onItemClick(Artist artist);
+    }
+
+    // Hàm set listener từ ngoài truyền vào
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public ArtistAdapter(Context context, List<Artist> artistList) {
         this.context = context;
         this.artistList = artistList;
     }
 
-    @NonNull
     @Override
-    public ArtistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_artist, parent, false);
+    public ArtistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.artist_item, parent, false);
         return new ArtistViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ArtistViewHolder holder, int position) {
+    public void onBindViewHolder(ArtistViewHolder holder, int position) {
         Artist artist = artistList.get(position);
-        holder.tvArtistName.setText(artist.getName());
+        holder.txtTenNgheSi.setText(artist.getTenNgheSi());
+
         Glide.with(context)
-                .load(artist.getImageUrl())
-                .placeholder(R.drawable.sample_artist) // fallback ảnh nếu lỗi
-                .error(R.drawable.sample_artist)
+                .load(artist.getHinhAnhNgheSi())
+                .centerCrop()
                 .into(holder.imgArtist);
+
+        // Gọi callback khi click
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(artist);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return artistList != null ? artistList.size() : 0;
+        return artistList.size();
     }
 
     public static class ArtistViewHolder extends RecyclerView.ViewHolder {
         ImageView imgArtist;
-        TextView tvArtistName;
+        TextView txtTenNgheSi;
 
-        public ArtistViewHolder(@NonNull View itemView) {
+        public ArtistViewHolder(View itemView) {
             super(itemView);
             imgArtist = itemView.findViewById(R.id.imgArtist);
-            tvArtistName = itemView.findViewById(R.id.tvArtistName);
+            txtTenNgheSi = itemView.findViewById(R.id.txtTenNgheSi);
         }
     }
 }
+
+
 
 

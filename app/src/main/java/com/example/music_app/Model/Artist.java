@@ -1,26 +1,21 @@
 package com.example.music_app.Model;
 
-import com.google.gson.annotations.SerializedName;
+public class Artist {
+    private String _id;
+    private String tenNgheSi;
+    private String hinhAnhNgheSi;
 
-import java.io.Serializable;
-
-public class Artist implements Serializable {
-    @SerializedName("tenNgheSi")
-    private String name;
-    @SerializedName("hinhAnh")
-    private String imageUrl;
-
-    public Artist(String name, String imageUrl) {
-        this.name = name;
-        this.imageUrl = imageUrl;
+    public String get_id() {
+        return _id;
     }
 
-    public String getName() {
-        return name;
+    public String getTenNgheSi() {
+        return tenNgheSi;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getHinhAnhNgheSi() {
+        return hinhAnhNgheSi;
     }
 }
+
 

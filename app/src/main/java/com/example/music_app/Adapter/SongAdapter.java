@@ -65,12 +65,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             holder.imgSong.setImageResource(R.drawable.default_song_image);
         } else {
             Glide.with(holder.itemView.getContext())
-                    .load(imageUrl)
+                    .load(song.getHinhBaiHat())
                     .placeholder(R.drawable.img_default_song)
                     .error(R.drawable.img_default_song)
                     .into(holder.imgSong);
         }
-
         holder.itemView.setOnClickListener(v -> {
             if (myClickListenner != null) {
                 myClickListenner.onItemClick(position);
@@ -78,6 +77,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         });
 
         holder.btnMoreSong.setOnClickListener(v -> showPopupMenu(v, song, position));
+
     }
 
     private void showPopupMenu(View view, Song song, int position) {
@@ -160,10 +160,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     @Override
     public int getItemCount() {
-        return songList.size();
+        return songList != null ? songList.size() : 0;
     }
 
-    static class SongViewHolder extends RecyclerView.ViewHolder {
+    public static class SongViewHolder extends RecyclerView.ViewHolder {
         ImageView imgSong;
         TextView tvSongName, tvArtist;
         ImageButton btnMoreSong;
@@ -176,7 +176,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             btnMoreSong = itemView.findViewById(R.id.btnMoreSong);
         }
     }
-
     public interface MyClickListenner {
         void onItemClick(int position);
     }

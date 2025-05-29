@@ -35,6 +35,10 @@
         <activity android:name=".Activity.AlbumListActivity" />
         <activity android:name=".Activity.ArtistListActivity" />
         <activity android:name=".Activity.CategoryMusicActivity" />
+        <activity android:name=".Activity.ArtistSongsActivity" />
+        <activity android:name=".Activity.AlbumSongsActivity" />
+        <activity android:name=".Activity.SearchActivity" />
+
     </application>
 
 
