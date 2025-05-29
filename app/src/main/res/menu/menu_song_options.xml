@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_add_to_playlist"
+        android:title="Thêm vào danh sách phát" />
+    <item
+        android:id="@+id/action_play_next"
+        android:title="Phát bài sau đó" />
+    <item
+        android:id="@+id/action_remove_from_favorite"
+        android:title="Xóa khỏi yêu thích" />
+    <item
+        android:id="@+id/action_remove_from_playlist"
+        android:title="Xóa khỏi danh sách phát" />
+</menu>

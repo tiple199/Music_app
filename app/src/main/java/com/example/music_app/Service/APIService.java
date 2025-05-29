@@ -5,11 +5,15 @@ import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 
 import com.example.music_app.Model.Artist;
+import com.example.music_app.Model.Favorite;
 import com.example.music_app.Model.Playlist;
 import com.example.music_app.Model.Song;
+import com.google.gson.JsonObject;
+
 import java.util.List;
 import retrofit2.http.GET;
 import retrofit2.http.PUT;
@@ -37,6 +41,24 @@ public interface APIService {
     @GET("favorites")
     Call<List<Song>> getFavoriteSongs(@Query("userId") String userId);
 
+    @FormUrlEncoded
+    @POST("favorites")
+    Call<Favorite> addFavorite(@Field("userId") String userId, @Field("songId") String songId);
+
+    //Dùng @HTTP vì Retrofit không hỗ trợ @DELETE với @Field mặc định.
+    @FormUrlEncoded
+    @HTTP(method = "DELETE", path = "favorites", hasBody = true)
+    Call<Void> removeFavorite(
+            @Field("userId") String userId,
+            @Field("songId") String songId
+    );
+
+    @GET("favorites/check")
+    Call<JsonObject> isSongFavorited(
+            @Query("userId") String userId,
+            @Query("songId") String songId
+    );
+
     @GET("artists")
     Call<List<Artist>> getPopularArtists();
 
@@ -63,6 +85,23 @@ public interface APIService {
 
     @DELETE("playlists/{id}")
     Call<ResponseBody> deletePlaylist(@Path("id") String playlistId);
+
+    @HTTP(method = "DELETE", path = "playlist/remove-song", hasBody = true)
+    @FormUrlEncoded
+    Call<ResponseBody> removeSongFromPlaylist(
+            @Field("playlistId") String playlistId,
+            @Field("songId") String songId
+    );
+
+    @FormUrlEncoded
+    @POST("playlist/add-song")
+    Call<ResponseBody> addSongToPlaylist(
+            @Field("playlistId") String playlistId,
+            @Field("songId") String songId
+    );
+
+
+
 
 
 

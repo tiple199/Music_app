@@ -1,6 +1,8 @@
 package com.example.music_app.Activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,12 +19,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.music_app.Fragment.LyricsBottomSheetFragment;
+import com.example.music_app.Model.Favorite;
+import com.example.music_app.Model.Playlist;
 import com.example.music_app.Model.Song;
 import com.example.music_app.R;
+import com.example.music_app.Service.APIRetrofitClient;
+import com.example.music_app.Service.APIService;
 import com.example.music_app.Service.MusicService;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SongActivity extends AppCompatActivity {
     private static final String TAG = "SongActivity";
@@ -46,6 +59,8 @@ public class SongActivity extends AppCompatActivity {
     private Runnable updateSeekBarRunnable;
     private SeekBar seekBar;
     private TextView currentTimeText, totalTimeText;
+    private boolean isFavorite = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +77,89 @@ public class SongActivity extends AppCompatActivity {
         currentSong = songList.get(currentTrackIndex);
 
         setupButtonClickListeners();
+
+
+        // Phan xu ly khi nhan tym thi them bai hat vao danh sach ua thich
+        ImageButton btnFavorite = findViewById(R.id.btnFavorite);
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String userId = prefs.getString("userId", null);
+
+        APIService apiService = APIRetrofitClient.getClient().create(APIService.class);
+
+        Call<JsonObject> checkCall = apiService.isSongFavorited(userId, currentSong.get_id());
+        checkCall.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    boolean favorited = response.body().get("isFavorite").getAsBoolean();
+                    isFavorite = favorited;
+                    btnFavorite.setImageResource(favorited ? R.drawable.ic_favorited : R.drawable.ic_favorite);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.e("FavoriteCheck", "Lỗi khi kiểm tra yêu thích: " + t.getMessage());
+            }
+        });
+        btnFavorite.setImageResource(isFavorite ? R.drawable.ic_favorited : R.drawable.ic_favorite);
+
+        btnFavorite.setOnClickListener(v -> {
+
+            if (userId == null) {
+                Toast.makeText(this, "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!isFavorite) {
+                //  Gọi API thêm yêu thích
+                Call<Favorite> call = apiService.addFavorite(userId, currentSong.get_id());
+                call.enqueue(new Callback<Favorite>() {
+                    @Override
+                    public void onResponse(Call<Favorite> call, Response<Favorite> response) {
+                        if (response.isSuccessful()) {
+                            isFavorite = true;
+                            btnFavorite.setImageResource(R.drawable.ic_favorited);
+                            Toast.makeText(SongActivity.this, "Đã thêm vào yêu thích", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(SongActivity.this, "Đã tồn tại trong yêu thích", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Favorite> call, Throwable t) {
+                        Toast.makeText(SongActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                // Gọi API xóa yêu thích
+                Call<Void> call = apiService.removeFavorite(userId, currentSong.get_id());
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful() || response.code() == 204) {
+                            isFavorite = false;
+                            btnFavorite.setImageResource(R.drawable.ic_favorite);
+                            Toast.makeText(SongActivity.this, "Đã xóa khỏi yêu thích", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(SongActivity.this, "Lỗi khi xóa", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(SongActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        //
+
+        // Xu ly khi nhan vao nut them playlist
+        ImageButton btnFeature = findViewById(R.id.btn_addSongtoPlaylist);
+        btnFeature.setOnClickListener(v -> showAddToPlaylistDialog());
+
+
 
         if (MusicService.getCurrentSong() == null ||
                 !MusicService.getCurrentSong().get_id().equals(currentSong.get_id()) ||
@@ -80,6 +178,76 @@ public class SongActivity extends AppCompatActivity {
         updatePlayPauseIcon();
         initializeSeekBarAndUpdater();
     }
+
+    // Doan xu ly khi them bai hat vao playlist
+    private void showAddToPlaylistDialog() {
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String userId = prefs.getString("userId", null);
+        if (userId == null) {
+            Toast.makeText(this, "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        APIService apiService = APIRetrofitClient.getClient().create(APIService.class);
+        Call<List<Playlist>> call = apiService.getUserPlaylists(userId);
+
+        call.enqueue(new Callback<List<Playlist>>() {
+            @Override
+            public void onResponse(Call<List<Playlist>> call, Response<List<Playlist>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Playlist> playlists = response.body();
+                    showPlaylistDialog(playlists);
+                } else {
+                    Toast.makeText(SongActivity.this, "Không thể tải danh sách phát", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Playlist>> call, Throwable t) {
+                Toast.makeText(SongActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showPlaylistDialog(List<Playlist> playlists) {
+        String[] names = new String[playlists.size()];
+        for (int i = 0; i < playlists.size(); i++) {
+            names[i] = playlists.get(i).getTen(); // chú ý getter đúng tên
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Thêm vào Playlist")
+                .setItems(names, (dialog, which) -> {
+                    String selectedPlaylistId = playlists.get(which).get_id(); // dùng playlistId
+                    addCurrentSongToPlaylist(selectedPlaylistId);
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
+    private void addCurrentSongToPlaylist(String playlistId) {
+        APIService apiService = APIRetrofitClient.getClient().create(APIService.class);
+        Call<ResponseBody> call = apiService.addSongToPlaylist(playlistId, currentSong.get_id());
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(SongActivity.this, "Đã thêm vào playlist", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SongActivity.this, "Thêm thất bại", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(SongActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    //
+
+
 
     private boolean loadIntentData() {
         Intent intent = getIntent();
@@ -189,6 +357,8 @@ public class SongActivity extends AppCompatActivity {
         Log.d(TAG, "playSongAtIndexLogic: Chuẩn bị phát '" + currentSong.getTenBaiHat() + "' tại index " + currentTrackIndex);
         MusicService.play(this, currentSong, songList, currentTrackIndex); // Truyền context
         updateAllUIAndListenersForNewSong();
+
+        checkAndUpdateFavoriteIcon(currentSong);
     }
 
     private void playNextSong() {
@@ -374,4 +544,32 @@ public class SongActivity extends AppCompatActivity {
             handler.removeCallbacks(updateSeekBarRunnable);
         }
     }
+
+    // ham kiem tra khi trang thi tym khi chuyen sang bai hat moi
+    private void checkAndUpdateFavoriteIcon(Song song) {
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String userId = prefs.getString("userId", null);
+        if (userId == null) return;
+
+        APIService apiService = APIRetrofitClient.getClient().create(APIService.class);
+        Call<JsonObject> checkCall = apiService.isSongFavorited(userId, song.get_id());
+
+        checkCall.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    isFavorite = response.body().get("isFavorite").getAsBoolean();
+                    ImageButton btnFavorite = findViewById(R.id.btnFavorite);
+                    btnFavorite.setImageResource(isFavorite ? R.drawable.ic_favorited : R.drawable.ic_favorite);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.e("FavoriteCheck", "Lỗi khi kiểm tra yêu thích: " + t.getMessage());
+            }
+        });
+    }
+
 }
+

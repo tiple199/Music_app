@@ -44,20 +44,20 @@
         android:layout_centerInParent="true"
         android:indeterminateTint="@android:color/white"
         android:visibility="gone" /> <RelativeLayout
-    android:id="@+id/mainContentGroup"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@id/top_nav_bar"
-    android:visibility="invisible"> <TextView
-    android:id="@+id/song_title_header"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Đang tải..."
-    android:textColor="@android:color/white"
-    android:textSize="22sp"
-    android:textStyle="bold"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="8dp"/>
+        android:id="@+id/mainContentGroup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_nav_bar"
+        android:visibility="invisible"> <TextView
+        android:id="@+id/song_title_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Đang tải..."
+        android:textColor="@android:color/white"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"/>
 
     <Button
         android:id="@+id/btn_lyrics"

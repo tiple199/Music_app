@@ -38,7 +38,7 @@
 
     <!-- More-options button -->
     <ImageButton
-        android:id="@+id/btnMore"
+        android:id="@+id/btnMoreSong"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="?attr/selectableItemBackgroundBorderless"

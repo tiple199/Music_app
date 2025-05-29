@@ -1,6 +1,7 @@
 package com.example.music_app.Fragment;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +19,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.music_app.Activity.SongActivity;
 import com.example.music_app.Adapter.SongAdapter;
 import com.example.music_app.Model.Playlist;
 import com.example.music_app.Model.Song;
 import com.example.music_app.R;
-import com.example.music_app.Server.APIService;
-import com.example.music_app.Server.APIRetrofitClient;
+import com.example.music_app.Service.APIService;
+import com.example.music_app.Service.APIRetrofitClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -192,7 +195,13 @@ public class FragmentPlaylistDetail extends Fragment {
             public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Song> songList = response.body();
-                    SongAdapter songAdapter = new SongAdapter(songList, null);
+                    SongAdapter songAdapter = new SongAdapter(songList, position -> {
+                        Intent intent = new Intent(getContext(), SongActivity.class);
+                        intent.putExtra("SONG_LIST", new ArrayList<>(songList));
+                        intent.putExtra("SELECTED_INDEX", position);
+                        startActivity(intent);
+                        requireActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.none);
+                    }, "playlist", playlistId);
                     rvSongs.setAdapter(songAdapter);
                 } else {
                     Toast.makeText(getContext(), "Không tìm thấy bài hát trong playlist", Toast.LENGTH_SHORT).show();
@@ -205,4 +214,5 @@ public class FragmentPlaylistDetail extends Fragment {
             }
         });
     }
+
 }

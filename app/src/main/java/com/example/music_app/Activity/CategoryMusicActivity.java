@@ -84,7 +84,7 @@ public class CategoryMusicActivity extends AppCompatActivity {
 
         SongAdapter adapter = new SongAdapter(songList,position -> {
 
-        });
+        }, null, null);
         recyclerViewSongs.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewSongs.setAdapter(adapter);
     }

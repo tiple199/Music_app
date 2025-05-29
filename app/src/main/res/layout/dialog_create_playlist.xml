@@ -10,6 +10,7 @@
         android:text="Tạo Playlist"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:textColor="@color/secondColor"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="12dp"
         android:layout_width="wrap_content"
@@ -20,12 +21,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Nhập tên playlist"
-        android:inputType="text" />
+        android:textColorHint="@color/fifthColor"
+        android:paddingStart="10dp"
+        android:paddingTop="15dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="15dp"
+        android:inputType="text"
+        android:background="@drawable/edittext_bg"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCreatePlaylist"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/btnlogin_bg"
         android:text="Thêm"
+        android:textColor="@color/white"
         android:layout_marginTop="16dp" />
 </LinearLayout>

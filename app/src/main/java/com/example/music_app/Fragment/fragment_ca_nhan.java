@@ -26,8 +26,8 @@ import com.example.music_app.Activity.LoginActivity;
 import com.example.music_app.Adapter.PlaylistAdapter;
 import com.example.music_app.Model.Playlist;
 import com.example.music_app.R;
-import com.example.music_app.Server.APIRetrofitClient;
-import com.example.music_app.Server.APIService;
+import com.example.music_app.Service.APIRetrofitClient;
+import com.example.music_app.Service.APIService;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;

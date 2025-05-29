@@ -104,7 +104,7 @@ public class fragment_trang_chu extends Fragment {
                         intent.putExtra("SELECTED_INDEX", position);
                         startActivity(intent);
                         getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.none);
-                    });
+                    }, null, null);
                     songListRecycler.setAdapter(songAdapter);
                 } else {
                     Toast.makeText(getContext(), "Không có dữ liệu bài hát", Toast.LENGTH_SHORT).show();
